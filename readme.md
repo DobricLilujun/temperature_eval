@@ -1,7 +1,5 @@
 # Temperature_eval
 
-##  Introduction
-
 This is a respository for evaluation and visulization of the results obtaining from observations. This is the respository acoomplanied by the following paper:
 
 > **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
@@ -12,18 +10,23 @@ This is a respository for evaluation and visulization of the results obtaining f
 ## Abilities
 This respository mainly contains several LLM abilities evaluations include: 
 
-- **Causal Reasoning**: A cognitive faculty historically ascribed solely to humans that derive conclusions from given premises by adhering to strict logical principles.
-- **Creativity**: An ability defined involves generating novel and valuable ideas, concepts, or products which require both originality and effectiveness.
-- **Instruction Following**: This reflects the crucial ability to adhere to instructions presented in prompts, particularly important in the application of LLMs.
-- **In-Context Learning**: The emerging verified ability reflects the skill to comprehend text and perform tasks within its context and few examples, and this skill has become a new paradigm for natural language processing (NLP).
-- **Summarization**: This entails condensing lengthy texts or discussions into concise and informative summaries, while preserving key information and main ideas.
-- **Machine Translation**: MT is a subfield of computational linguistics, and LLMs have shown outstanding potential in translating text from one language to another.
+- **Causal Reasoning (CR)**: A cognitive faculty historically ascribed solely to humans that derive conclusions from given premises by adhering to strict logical principles.
+- **Creativity (CT)**: An ability defined involves generating novel and valuable ideas, concepts, or products which require both originality and effectiveness.
+- **Instruction Following (IF)**: This reflects the crucial ability to adhere to instructions presented in prompts, particularly important in the application of LLMs.
+- **In-Context Learning (ICL)**: The emerging verified ability reflects the skill to comprehend text and perform tasks within its context and few examples, and this skill has become a new paradigm for natural language processing (NLP).
+- **Summarization (SUM)**: This entails condensing lengthy texts or discussions into concise and informative summaries, while preserving key information and main ideas.
+- **Machine Translation (MT)**: MT is a subfield of computational linguistics, and LLMs have shown outstanding potential in translating text from one language to another.
 
 
 
+## How to use it?
 
 
+This project mainly shows the results obtained during the research and accepts all comments. This data is uploaded in CSV files in the data folder. The statistical evaluation is in `evaluation_{ability_name}.ipynb` and the causal estimation is used in `causal_modelling_complete_{ability_name}.ipynb`. Readers can check the CSV files obtained during the research to see if there are any intuitions for future research. Here, we show the empirical results and causal estimation results to give you an intuition about how to set temperature during your LLMs application pipeline.
 
+![empirical](images/stats.png)
 
+<p align="center"><em>Figure 1: Empirical results.</em></p>
 
-
+![causal estimation results](images/causal.png)
+<p align="center"><em>Figure 2: Causal estimation results.</em></p>
