@@ -30,3 +30,12 @@ This project mainly shows the results obtained during the research and accepts a
 
 ![causal estimation results](images/causal.png)
 <p align="center"><em>Figure 2: Causal estimation results.</em></p>
+
+## Outcome Data
+
+The file names inside each folder of data are of two types:
+
+- `exp_result_{model_id}_{time_generated}_{project_id}.csv`
+- `exp_result_{model_id}_{time_generated}_{project_id}_evaluated.csv`
+
+The file without `_evaluated` contains all the inferences for the model. The file with `_evaluated` contains additional columns for performance evaluation. The column details are easy to understand. If you have any questions, please contact my personal email: lilujun588588@gmail.com.

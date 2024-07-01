@@ -12,7 +12,7 @@
 #SBATCH --mail-type=BEGIN,END
 #SBATCH --output=/project/home/XXX/projects_lujun/resource/inputs/ICL/slurm_%j.out
 
-export INPUT_PATH="resource/inputs/ICL"  # ICL
+export INPUT_PATH="resource/inputs/ICL"  
 
 # export MODEL="Llama-2-7b-chat-hf"
 # export MODEL="Llama-2-13b-chat-hf"
