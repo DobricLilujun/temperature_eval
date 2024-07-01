@@ -4,6 +4,8 @@ This is a respository for evaluation and visulization of the results obtaining f
 
 > **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
 
+![empirical](images/head.jpeg)
+
 ## Abstract
 
 > When employing Large Language Models (LLMs) on different tasks, a crucial hyperparameter to alternate is the sampling temperature, typically adjusted through logarithmic probability indicating the level of randomness. Recent research focuses on empirical performance analysis within a single scenario and one specific ability, without providing a comprehensive causality analysis encompassing several use cases.  Furthermore, identifying the optimal temperature for specific applications (use case/task) remains a significant challenge in research and industry contexts. In this work, we provide a comprehensive study to understand the behavior and capabilities of LLMs at various sampling temperatures. By following the first two levels of the causality ladder,  association and intervention. This paper shifts the focus on the effect of temperature from general mixed-task benchmarks to examine six distinct-specific abilities, by developing both statistical and causal models, thereby providing a thorough causality analysis and guidelines for optimal temperature settings.
