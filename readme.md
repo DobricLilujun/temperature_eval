@@ -4,7 +4,10 @@ This is a respository for evaluation and visulization of the results obtaining f
 
 > **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
 
-![empirical](images/head.jpeg)
+<p align="center">
+  <img src="images/head.jpeg" alt="empirical" width="300">
+</p>
+
 
 ## Abstract
 
