@@ -27,7 +27,7 @@ This respository mainly contains several LLM abilities evaluations include:
 ## How to use it?
 
 
-This project mainly shows the results obtained during the research and accepts all comments. This data is uploaded in CSV files in the data folder. The statistical evaluation is in `evaluation_{ability_name}.ipynb` and the causal estimation is used in `causal_modelling_complete_{ability_name}.ipynb`. Readers can check the CSV files obtained during the research to see if there are any intuitions for future research. Here, we show the empirical results and causal estimation results to give you an intuition about how to set temperature during your LLMs application pipeline.
+This project mainly shows the results obtained during the research and accepts all comments. This data is uploaded in CSV files in the data folder. The statistical evaluation is in `evaluation_{ability_name}.ipynb` and the causal modeling is used in `causal_modelling_complete_base.ipynb`. Readers can check the CSV files obtained during the research to see if there are any intuitions for future research. Here, we show the empirical results and causal estimation results to give you an intuition about how to set temperature during your LLMs application pipeline.
 
 ![empirical](images/stats.png)
 
