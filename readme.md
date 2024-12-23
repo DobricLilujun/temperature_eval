@@ -1,5 +1,24 @@
 # Temperature_eval
 
+There will be some updates for the in-depth analysis on the single inference. Last update: **15 July, 2024**.
+
+To do:
+
+  1. Creativity analysis and validation of results. 
+     1. Why high temperature lose performance and why the most good temperature is 1.0 but not 0 or 2.0.
+     2. Hallucination detection count? How to give this as a statistical results
+     3. Perplextiy of stories, cosine similarity of stories, normalised edit distatnce resulst.
+     4. List all different types of hallucination and try to explain why
+  2. Summarization analysis.
+     1. What is the comparaison between STOA?
+     2. What is the worse cases of it?
+
+https://medium.com/ai-assimilating-intelligence/cross-entropy-in-large-language-models-llms-4f1c842b5fca
+   
+**Detecting grammer error checking? **
+**Detecting hallucination error checking? **
+
+
 This is a respository for evaluation and visulization of the results obtaining from observations. This is the respository acoomplanied by the following paper:
 
 > **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
