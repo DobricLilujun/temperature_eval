@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import requests
 import argparse
+import json
 
 
 def validate_config(config):
@@ -122,6 +123,16 @@ def main(args):
         if latest_file and not config.get("is_new_file", False)
         else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     )
+    output_file_json = (
+        latest_file
+        if latest_file and not config.get("is_new_file", False)
+        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    )
+    output_file_parquet = (
+        latest_file
+        if latest_file and not config.get("is_new_file", False)
+        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.parquet"
+    )
 
     start_idx = (
         load_checkpoint(
@@ -146,9 +157,23 @@ def main(args):
         generated_text = generate_text_with_vllm(config, updated_row["input"])
         updated_row["generate_response"] = generated_text
         updated_dataframe = pd.DataFrame([updated_row])
-        write_mode = (
-            "w" if (i == start_idx and bool(config.get("is_new_file", False))) else "a"
-        )
+
+        # 写入 JSON 文件
+        with open(output_file_json, "a") as json_file:
+            json_data = updated_row.to_dict()
+            json_file.write(json.dumps(json_data) + "\n")  # 每行写入一个 JSON
+
+        # 写入 Parquet 文件
+        if i == 0 or bool(config.get("is_new_file", False)):
+            # 如果是第一行，创建新文件并写入数据
+            updated_dataframe.to_parquet(output_file_parquet, index=False)
+        else:
+            # 如果不是第一行，追加到现有 Parquet 文件
+            existing_df = pd.read_parquet(output_file_parquet)
+            combined_df = pd.concat([existing_df, updated_dataframe], ignore_index=True)
+            combined_df.to_parquet(output_file_parquet, index=False)
+
+        write_mode = "w" if (i == 0 and bool(config.get("is_new_file", False))) else "a"
         updated_dataframe.to_csv(
             output_file, index=False, mode=write_mode, header=(write_mode == "w")
         )
