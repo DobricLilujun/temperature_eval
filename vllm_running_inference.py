@@ -121,17 +121,7 @@ def main(args):
     output_file = (
         latest_file
         if latest_file and not config.get("is_new_file", False)
-        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-    )
-    output_file_json = (
-        latest_file
-        if latest_file and not config.get("is_new_file", False)
-        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    )
-    output_file_parquet = (
-        latest_file
-        if latest_file and not config.get("is_new_file", False)
-        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.parquet"
+        else f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
     )
 
     start_idx = (
@@ -145,7 +135,9 @@ def main(args):
     )
     print("Start From Index: ", start_idx)
 
-    # Main processing loop
+    batch_size = 100
+    buffer = []
+
     for i, row in tqdm(
         cartesian_df_final.iloc[start_idx:].iterrows(),
         total=cartesian_df_final.shape[0] - start_idx,
@@ -156,26 +148,25 @@ def main(args):
         config["options"]["seed"] = updated_row["seed"]
         generated_text = generate_text_with_vllm(config, updated_row["input"])
         updated_row["generate_response"] = generated_text
-        updated_dataframe = pd.DataFrame([updated_row])
 
-        # 写入 JSON 文件
-        with open(output_file_json, "a") as json_file:
-            json_data = updated_row.to_dict()
-            json_file.write(json.dumps(json_data) + "\n")  # 每行写入一个 JSON
+        buffer.append(updated_row)
 
-        # 写入 Parquet 文件
-        if i == 0 or bool(config.get("is_new_file", False)):
-            # 如果是第一行，创建新文件并写入数据
-            updated_dataframe.to_parquet(output_file_parquet, index=False)
-        else:
-            # 如果不是第一行，追加到现有 Parquet 文件
-            existing_df = pd.read_parquet(output_file_parquet)
-            combined_df = pd.concat([existing_df, updated_dataframe], ignore_index=True)
-            combined_df.to_parquet(output_file_parquet, index=False)
+        if len(buffer) >= batch_size:
+            pd.DataFrame(buffer).to_json(
+                output_file,
+                orient="records",
+                lines=True,
+                mode="a" if i > start_idx else "w",
+            )
+            buffer = []
 
-        write_mode = "w" if (i == 0 and bool(config.get("is_new_file", False))) else "a"
-        updated_dataframe.to_csv(
-            output_file, index=False, mode=write_mode, header=(write_mode == "w")
+    # 将剩余数据写入
+    if buffer:
+        pd.DataFrame(buffer).to_json(
+            output_file,
+            orient="records",
+            lines=True,
+            mode="a" if i > start_idx else "w",
         )
 
     print(f"Tasks completed. Results saved to {output_file}")
@@ -226,3 +217,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args)
+
+
+# python vllm_running_inference.py     --model_name "Llama-3.2-1B-Instruct"     --model_path_base "/home/snt/llm_models/"     --input_path_folder "/home/snt/projects_lujun/temperature_eval/data/Intermediate/"     --rep 3     --server_url "http://0.0.0.0:8000/v1/chat/completions"     --is_new_file
