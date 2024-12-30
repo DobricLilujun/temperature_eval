@@ -72,9 +72,7 @@ class EVALUATOR:
 
                 # Use VLLM API for generating evaluation results
                 else:
-                    generation = self.generate_text_with_vllm(
-                        self.model_name, question_content
-                    )
+                    generation = self.generate_text_with_vllm(question_content)
                     times += 1
                 label, generation = self.evaluation_method(generation)
                 if label is not None:
@@ -86,3 +84,5 @@ class EVALUATOR:
                 print(e)
                 print("Retrying...")
                 time.sleep(1)
+
+        return None, generation
