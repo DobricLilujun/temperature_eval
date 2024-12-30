@@ -62,7 +62,7 @@ def main(args):
     LIST_DATASET_CSV = ["CR", "CT", "ICL", "IF", "MT", "SUMM"]  # Dataset list
     MODEL_NAME = args.model_name  # Model name
     MODEL_BASE_PATH = args.model_path_base  # Base path for the model
-    DATA_PATH_TEMPLATE = f"{args.input_path_folder}/{{}}.csv"  # Data path template
+    DATA_PATH_TEMPLATE = f"{args.input_path_folder}/{{}}_generated_questions.csv"  # Data path template
     TEMPERATURE_LIST = np.round(
         np.arange(0.1, 2.0, 0.3), 1
     )  # List of temperature values
@@ -119,7 +119,7 @@ def main(args):
     # Get the latest output file or start fresh
     latest_file = get_latest_file(PREFIX)
     if config.get("is_new_file", False):
-        output_file = f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+        output_file = f"{PREFIX}_generalization_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
         start_idx= 0
     else:
         if latest_file:
@@ -146,7 +146,10 @@ def main(args):
         updated_row = row.copy()
         config["options"]["temperature"] = updated_row["temperature"]
         config["options"]["seed"] = updated_row["seed"]
-        generated_text = generate_text_with_vllm(config, updated_row["input"])
+        question = row.get("Question")
+        if pd.isna(question):
+            continue
+        generated_text = generate_text_with_vllm(config, question)
         updated_row["generate_response"] = generated_text
         updated_dataframe = pd.DataFrame([updated_row])
 

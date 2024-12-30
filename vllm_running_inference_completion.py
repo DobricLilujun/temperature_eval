@@ -47,10 +47,10 @@ def get_latest_file(prefix):
     return max(files, key=os.path.getmtime) if files else None
 
 
-def load_checkpoint(latest_file, text_column):
+def load_checkpoint(latest_file,text_column):
     """Load checkpoint from the latest generated file."""
     if latest_file:
-        translated_df = pd.read_csv(latest_file)
+        translated_df = pd.read_json(latest_file,lines=True)
         translated_texts = translated_df[text_column].tolist()
         return len(translated_texts)
     return 0
@@ -118,6 +118,7 @@ def main(args):
 
     # Get the latest output file or start fresh
     latest_file = get_latest_file(PREFIX)
+
     if config.get("is_new_file", False):
         output_file = f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
         start_idx= 0
@@ -133,11 +134,11 @@ def main(args):
         else:
             output_file = f"{PREFIX}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
             start_idx = 0
+
+    start_idx = 29593 + start_idx
     print("Start From Index: ", start_idx)
 
-
-# python vllm_running_inference.py --model_name Llama-3.2-3B-Instruct-awq --model_path_base /home/llama/models/base_models/ --input_path_folder /home/llama/Personal_Directories/srb/temperature_eval/data/Intermediate/ --rep 3 --server_url http://0.0.0.0:4362/v1/chat/completions
-
+    # Main processing loop
     for i, row in tqdm(
         cartesian_df_final.iloc[start_idx:].iterrows(),
         total=cartesian_df_final.shape[0] - start_idx,
@@ -151,19 +152,11 @@ def main(args):
         updated_dataframe = pd.DataFrame([updated_row])
 
         # 写入 JSON 文件
-        if config.get("is_new_file", False):
-            if i == start_idx:
-                mode = "w"
-            else:
-                mode = "a"
-        else:
-            mode = "a"
-            
         updated_dataframe.to_json(
             output_file,
             orient="records",
             lines=True,
-            mode=mode,
+            mode="a" if i > start_idx else "w",
         )
 
     print(f"Tasks completed. Results saved to {output_file}")
@@ -210,10 +203,7 @@ if __name__ == "__main__":
         "--is_new_file",
         action="store_true",
         help="Start a new output file",
-        default=True,
+        default=False,
     )
     args = parser.parse_args()
     main(args)
-
-
-# python vllm_running_inference.py     --model_name "Llama-3.2-1B-Instruct"     --model_path_base "/home/snt/llm_models/"     --input_path_folder "/home/snt/projects_lujun/temperature_eval/data/Intermediate/"     --rep 3     --server_url "http://0.0.0.0:8000/v1/chat/completions"     --is_new_file
