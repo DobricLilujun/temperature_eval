@@ -183,16 +183,16 @@ def evaluate_email_list(
     return output, agg_prob_dict
 
 
-model_path = "/home/lujun_li/projects/temperature_eval/bert_model_target_2"
-tokenizer_path = "/home/lujun_li/models/bert-base-multilingual-uncased"
-# tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
-# model = torch.load("/home/snt/projects_lujun/temperature_eval/bert_model_target_2")
-# output, prob_dict = evaluate_email(email, model, tokenizer, max_padding=512)
-all_outputs, all_prob_dicts = evaluate_email_list(
-    ["hello", "moto"],
-    "bert-base-multilingual-uncased",
-    model_path,
-    tokenizer_path,
-    max_padding=512,
-)
-print(all_outputs)
+# model_path = "/home/lujun_li/projects/temperature_eval/bert_model_target_2"
+# tokenizer_path = "/home/lujun_li/models/bert-base-multilingual-uncased"
+# # tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
+# # model = torch.load("/home/snt/projects_lujun/temperature_eval/bert_model_target_2")
+# # output, prob_dict = evaluate_email(email, model, tokenizer, max_padding=512)
+# all_outputs, all_prob_dicts = evaluate_email_list(
+#     ["hello", "moto"],
+#     "bert-base-multilingual-uncased",
+#     model_path,
+#     tokenizer_path,
+#     max_padding=512,
+# )
+# print(all_outputs)

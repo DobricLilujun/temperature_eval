@@ -13,13 +13,12 @@ class EVALUATOR:
 
         :param input_path: Path to the input JSONL file.
         :param output_path: Path to the output JSONL file.
-        :param eval_model: Model name to use for evaluation (e.g., 'gpt-3.5-turbo').
         :param api_client: API client instance (OpenAI or vLLM).
         :param temperature: Temperature setting for the model (default is 0).
         """
         self.server_url = server_url
         # System message for evaluation task
-
+        self.eval_model = "gpt-3.5-turbo"
         self.model_name = model_name
         self.options = {
             "temperature": 0.7,
@@ -62,10 +61,10 @@ class EVALUATOR:
                         {"role": "system", "content": "You are a helpful assistant."},
                         {"role": "user", "content": question_content},
                     ]
-                    completion = openai.ChatCompletion.create(
+                    completion = openai.chat.completions.create(
                         model=self.eval_model,
                         messages=messages,
-                        temperature=self.temperature,
+                        temperature=0.1,
                     )
                     generation = completion.choices[0].message.content.strip()
                     times += 1

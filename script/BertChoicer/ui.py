@@ -9,26 +9,22 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QTextEdit,
 )
+from PyQt6.QtCore import Qt
 
 
 # 模拟从后台分类模型获取标签比重和对应温度
 def get_classification_probabilities(prompt):
-    # 假设这里是从分类模型获取的标签比重
     labels = ["Label 1", "Label 2", "Label 3"]
-    probabilities = np.random.dirichlet(
-        np.ones(len(labels)), size=1
-    ).flatten()  # 模拟概率分布
+    probabilities = np.random.dirichlet(np.ones(len(labels)), size=1).flatten()
     return dict(zip(labels, probabilities))
 
 
 def get_optimal_temperature(probabilities):
-    # 假设根据概率计算温度的简单逻辑
     temperature = np.sum(probabilities) / len(probabilities)
     return round(temperature, 2)
 
 
 def get_language_model(probabilities):
-    # 根据概率的最大值选择语言模型
     max_label = max(probabilities, key=probabilities.get)
     if max_label == "Label 1":
         return "GPT-3"
@@ -42,6 +38,46 @@ class UserInterface(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Prompt Analyzer")
+
+        # Apply a custom theme
+        self.setStyleSheet(
+            """
+            QWidget {
+                background-color: #f4f4f9;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            }
+            QLabel {
+                font-weight: bold;
+                color: #444;
+            }
+            QLineEdit, QTextEdit {
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+            QLineEdit:focus, QTextEdit:focus {
+                border-color: #0088cc;
+                box-shadow: 0 0 5px rgba(0, 136, 204, 0.5);
+            }
+            QPushButton {
+                background-color: #0088cc;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #005f88;
+            }
+            QTextEdit {
+                min-height: 200px;
+            }
+            """
+        )
 
         # 创建布局
         self.layout = QVBoxLayout()
@@ -95,4 +131,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = UserInterface()
     window.show()
-    sys.exit(app.exec())  # Notice the change here: exec_() -> exec()
+    sys.exit(app.exec())
