@@ -1,8 +1,11 @@
 
 import requests
 import json
-from BertChoicer.bertChoicer import bertClassifier, bertClassifierList
+from BertChoicer import bertChoicer
 import pandas as pd
+
+bertClassifier = bertChoicer.bertClassifier
+bertClassifierList = bertChoicer.bertClassifierList
 
 def find_performance_score(df, model_name, ability, Temperature):
     """
