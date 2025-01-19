@@ -7,26 +7,26 @@ import pandas as pd
 bertClassifier = bertChoicer.bertClassifier
 bertClassifierList = bertChoicer.bertClassifierList
 
-def find_performance_score(df, model_name, ability, Temperature):
+def find_performance_score(df, model_name, category, temperature):
     """
     Finds the performance score of a model based on specific criteria.
 
     Parameters:
         df (DataFrame): The input DataFrame containing the model data.
         model_name (str): The name of the model to filter.
-        ability (str): The ability parameter to match.
-        Temperature (float): The temperature value to filter.
+        category (str): The category parameter to match.
+        temperature (float): The temperature value to filter.
 
     Returns:
         float or None: The performance score of the first matching row, 
                        or None if no match is found.
 
     Raises:
-        ValueError: If 'model_name', 'ability', or 'Temperature' values are missing or invalid.
-        KeyError: If 'ability' or 'Temperature' columns are missing in the DataFrame.
+        ValueError: If 'model_name', 'category', or 'temperature' values are missing or invalid.
+        KeyError: If 'category' or 'temperature' columns are missing in the DataFrame.
     """
-    # Step 1: Check if 'ability' and 'Temperature' columns exist in the DataFrame
-    required_columns = ["ability", "Temperature"]
+    # Step 1: Check if 'category' and 'temperature' columns exist in the DataFrame
+    required_columns = ["category", "temperature"]
     for col in required_columns:
         if col not in df.columns:
             raise KeyError(f"Missing required column: {col}")
@@ -34,42 +34,42 @@ def find_performance_score(df, model_name, ability, Temperature):
     # Step 2: Check if input values are valid (non-null and non-empty)
     if model_name is None or model_name == "":
         raise ValueError("The 'model_name' value cannot be None or empty.")
-    if ability is None or ability == "":
-        raise ValueError("The 'ability' value cannot be None or empty.")
-    if Temperature is None:
-        raise ValueError("The 'Temperature' value cannot be None.")
+    if category is None or category == "":
+        raise ValueError("The 'category' value cannot be None or empty.")
+    if temperature is None:
+        raise ValueError("The 'temperature' value cannot be None.")
 
     # Step 3: Check if 'model_name' exists in the 'model_name' column
     if model_name not in df["model_name"].values:
         print(f"Warning: '{model_name}' not found in 'model_name' column. Proceeding with empty result.")
         # Create an empty result if model_name does not exist
-        if ability in df["ability"].values and Temperature not in df["Temperature"].values:
+        if category in df["category"].values and temperature not in df["temperature"].values:
             filtered_df = df[
-                (df["ability"] == ability)     
-                & (df["Temperature"] == Temperature) 
+                (df["category"] == category)     
+                & (df["temperature"] == temperature) 
             ]
-            mean_value = filtered_df["performance_score"].mean()
+            mean_value = filtered_df["accuracy"].mean()
             result = mean_value
         else:
             result = None
 
-    elif ability not in df["ability"].values:
-        print(f"Warning: '{ability}' not found in 'ability' column. Proceeding with empty result.")
-        # Create an empty result if ability does not exist
+    elif category not in df["category"].values:
+        print(f"Warning: '{category}' not found in 'category' column. Proceeding with empty result.")
+        # Create an empty result if category does not exist
         result = None
 
-    elif Temperature not in df["Temperature"].values:
-        print(f"Warning: '{Temperature}' not found in 'Temperature' column. Proceeding with empty result.")
-        # Create an empty result if Temperature does not exist
+    elif temperature not in df["temperature"].values:
+        print(f"Warning: '{temperature}' not found in 'temperature' column. Proceeding with empty result.")
+        # Create an empty result if temperature does not exist
         result = None
     else:
         # Step 4: Filter the DataFrame based on the input conditions
         filtered_df = df[
             (df["model_name"] == model_name) 
-            & (df["ability"] == ability)     
-            & (df["Temperature"] == Temperature) 
+            & (df["category"] == category)     
+            & (df["temperature"] == temperature) 
         ]
-        result = filtered_df["performance_score"].iloc[0]
+        result = filtered_df["accuracy"].iloc[0]
 
     return result
 
@@ -99,7 +99,7 @@ def get_best_temperature(
     # Step 1: Use the BERT classifier to classify the input text and obtain probabilities for each ability
     _ , prob_dict = bertClassifier(
         input_text=input_text,           # The input text to classify
-        bert_model_path=bert_model_path,     # Path to the pre-trained model
+        model_path=bert_model_path,     # Path to the pre-trained model
         tokenizer_path=tokenizer_path,   # Path to the tokenizer
         max_padding=512,                 # Maximum padding length for the tokenizer
     )
@@ -108,7 +108,7 @@ def get_best_temperature(
     best_temperature = None  # The optimal temperature value
     best_score = 0           # The highest score observed so far
 
-    for temp in df["Temperature"].unique().tolist():
+    for temp in df["temperature"].unique().tolist():
         max_ability = max(prob_dict, key=prob_dict.get)
         score = find_performance_score(
                 df, target_model_name, max_ability, temp  # Fetch performance score for each ability and temperature
@@ -134,7 +134,7 @@ def get_average_best_temperature(
     performance_dict = {}  # Dictionary to store the accumulated performance scores for each temperature
 
     # Loop over each unique temperature in the DataFrame
-    for temp in df["Temperature"].unique().tolist():
+    for temp in df["temperature"].unique().tolist():
         performance_dict[temp] = 0  # Initialize performance score for the current temperature
 
         # For each input prompt in the input text list
@@ -142,8 +142,7 @@ def get_average_best_temperature(
             # Evaluate the input text using a BERT classifier, getting the probability distribution for each ability
             _ , prob_dict = bertClassifier(
                 input_text=input_text,  # The input text to be classified
-                target_model_name=target_model_name,  # The model used for classification
-                bert_model_path=bert_model_path,  # Path to the BERT model
+                model_path=bert_model_path,  # Path to the BERT model
                 tokenizer_path=tokenizer_path,  # Path to the tokenizer
                 max_padding=512,  # Maximum padding for sequences
             )

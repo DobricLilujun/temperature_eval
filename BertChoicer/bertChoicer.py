@@ -1,7 +1,6 @@
 import numpy as np
 import torch
-from transformers import BertTokenizer
-import os
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # Auto-detect GPU or fallback to CPU
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -22,8 +21,8 @@ def bertClassifier(input_text, model_path, tokenizer_path, max_padding=512):
         tuple: Classification result string and dictionary containing category probabilities.
     """
     # Load tokenizer and model from disk
-    tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
-    model = torch.load(model_path, map_location=device)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, do_lower_case=True)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path)
     model.to(device)
     model.eval()  # Set the model to evaluation mode
 
@@ -80,8 +79,8 @@ def bertClassifierList(input_text_list, model_path, tokenizer_path, max_padding=
         tuple: List of classification results for each text and aggregated category probabilities.
     """
     # Load tokenizer and model from disk
-    tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
-    model = torch.load(model_path, map_location=device)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, do_lower_case=True)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path)
     model.to(device)
     model.eval()  # Set the model to evaluation mode
 

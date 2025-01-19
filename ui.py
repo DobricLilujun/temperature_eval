@@ -1,30 +1,29 @@
-import gradio as gr
-import pandas as pd
-from transformers import BertTokenizer, BertForSequenceClassification
-from torch import torch
-from torch.nn import functional as F
+# Import necessary libraries
+import gradio as gr  # Gradio is used for creating web-based UI for machine learning models
+import pandas as pd  # Pandas is used for handling data in DataFrame format
+from transformers import BertTokenizer, BertForSequenceClassification  # Hugging Face's transformers for BERT model and tokenizer
+from torch import torch  # PyTorch for working with neural networks
+from torch.nn import functional as F  # PyTorch's functional module (commonly used for activations, loss functions)
+from sklearn.preprocessing import MinMaxScaler  # Used for scaling data
+import matplotlib.pyplot as plt  # Matplotlib for plotting graphs
 
-import gradio as gr
-import pandas as pd
-from transformers import BertTokenizer, BertForSequenceClassification
-from torch import torch
-from torch.nn import functional as F
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-from BertChoicer.static import model_id, assets_path
-from BertChoicer.gradioUIManager import GradioUIManager
-from BertChoicer.bertChoicer import bertClassifier, bertClassifierList
-from BertChoicer.services import find_performance_score, get_best_temperature, get_average_best_temperature
-import json
-import requests
+# Import custom modules from the project
+from BertChoicer.static import model_id, assets_path, model_choices  # Static configurations like model IDs and asset paths
+from BertChoicer.gradioUIManager import GradioUIManager  # Custom UI manager for Gradio interface
+from BertChoicer.bertChoicer import bertClassifier, bertClassifierList  # Functions for BERT classification tasks
+from BertChoicer.services import find_performance_score, get_best_temperature, get_average_best_temperature  # Helper functions for performance evaluation
 
+import json  # To handle JSON data
+import requests  # To make HTTP requests
 
-
+# Define paths for model and tokenizer
 input_model_path = "Volavion/bert-base-multilingual-uncased-temperature-cls"
 tokenizer_path = "Volavion/bert-base-multilingual-uncased-temperature-cls"
+
+# Load a JSON dataset for classification task (could be for training or evaluation)
 df = pd.read_json(assets_path, lines=True)
 
-
+# Function to handle the button click event in the experiment interface
 def on_experiment_button_click(
     input_text,  # The input prompt that will be sent to the API
     best_temperature,  # The best temperature value to be used in the request
@@ -57,15 +56,13 @@ def on_experiment_button_click(
         # If the response status code is not 200, return an error message with the status code
         return f"Error: {response.status_code}"
 
-
-
+# Function to handle button click for classification and file processing
 def on_button_click(input_text, input_file, input_model):
-
+    # If a file is uploaded, load the CSV data into a DataFrame
     if input_file is not None:
         input_df = pd.read_csv(input_file.name)
 
-
-    # If text input is provided, classify it
+    # If text input is provided, classify it using BERT
     if input_text:
         _, prob_dict = bertClassifier(
             input_text=input_text,
@@ -73,17 +70,18 @@ def on_button_click(input_text, input_file, input_model):
             tokenizer_path=tokenizer_path,
             max_padding=512,
         )
+        # Determine the best temperature for the input text
         best_temperature = get_best_temperature(
             input_text=input_text,
-            input_model_path=input_model_path,
-            input_model_name=input_model,
+            bert_model_path=input_model_path,
+            target_model_name=input_model,
             tokenizer_path=tokenizer_path,
             df=df,
         )
 
     # If file input is provided, classify all texts in the file
     if input_file:
-        input_texts = input_df["input"].tolist()
+        input_texts = input_df["input"].tolist()  # Extract all input texts from the file
         _, prob_dict = bertClassifierList(
             input_text_list=input_texts,
             model_path=input_model_path,
@@ -91,58 +89,42 @@ def on_button_click(input_text, input_file, input_model):
             max_padding=512,
         )
 
+        # Determine the average best temperature across all texts in the file
         best_temperature = get_average_best_temperature(
             input_text_list=input_texts,
-            input_model_path=input_model_path,
-            input_model_name=input_model,
+            bert_model_path=input_model_path,
+            target_model_name=input_model,
             tokenizer_path=tokenizer_path,
             df=df,
         )
 
-    prob_list = list(prob_dict.items())
-    # class_labels = [item[0] for item in prob_list]  # Extract labels (keys)
-    # probabilities = [item[1] for item in prob_list]  # Extract values (probabilities)
+    # Extract class labels and their corresponding probabilities from the result
+    prob_list = list(prob_dict.items())  # Assuming prob_dict contains the data
 
-    # colors = ["#ff9999", "#66b3ff", "#99ff99", "#ffcc99"]
+    class_labels = [item[0] for item in prob_list]  # Class labels
+    probabilities = [item[1] for item in prob_list]  # Class probabilities
 
-    # Create pie chart with improved aesthetics
-    fig, ax = plt.subplots(
-        figsize=(5, 5)
-    )  # Set the figure size for better visual appeal
-    table = ax.table(
-        cellText=df.values,
-        colLabels=df.columns,
-        cellLoc="center",
-        loc="center"
-    )
-    table.auto_set_font_size(False)
-    table.set_fontsize(10)
-    table.auto_set_column_width(col=list(range(len(df.columns))))
+    # Create a bar chart to visualize the classification probabilities
+    fig, ax = plt.subplots(figsize=(8, 5.5))  # Set the figure size
+    ax.bar(class_labels, probabilities, color='skyblue')  # Create bars for each class
 
-    # # Equal aspect ratio ensures that pie is drawn as a circle
-    # ax.axis("equal")
+    # Add labels and title for better understanding
+    ax.set_xlabel('Class Labels')  # X-axis label
+    ax.set_ylabel('Probability')   # Y-axis label
+    ax.set_title('Class Probabilities')  # Chart title
 
-    # # Add a title
-    # ax.set_title("Class Distribution", fontsize=16, fontweight="bold")
+    # Rotate class labels if needed for better readability
+    plt.xticks(rotation=45, ha='right')
 
+    # Adjust layout to avoid overlapping elements
+    plt.tight_layout()
+
+    # Return the figure and temperature (adjust based on your logic)
     return fig, best_temperature, best_temperature
 
-choices = [
-    "Qwen2.5-1.5B-Instruct",
-    "Phi-3.5-mini-instruct",
-    "Llama-3.2-3B-Instruct",
-    "Qwen2.5-3B-Instruct",
-    "Llama-3.2-1B-Instruct",
-    "Llama-2-7b-chat-hf",
-    "Llama-2-13b-chat-hf",
-    "Llama-2-70b-chat-hf",
-    "Meta-Llama-3-8B-Instruct",
-    "Meta-Llama-3-70B-Instruct",
-    "Mistral-7B-Instruct-v0.2",
-    "Mixtral-8x7B-Instruct-v0.1"
-]
+# Initialize Gradio UI manager and create the interface
+BertChoicerUIManager = GradioUIManager(choices=model_choices, on_button_click=on_button_click, on_experiment_button_click=on_experiment_button_click)
+BertChoicerUIManager.create_interface()  # Create the interface with the provided functions
 
-
-BertChoicerUIManager = GradioUIManager(choices = choices, on_button_click = on_button_click, on_experiment_button_click = on_experiment_button_click)
-BertChoicerUIManager.create_interface()
+# Launch the Gradio demo
 BertChoicerUIManager.demo.launch(share=False)
