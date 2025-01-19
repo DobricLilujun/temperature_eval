@@ -26,9 +26,9 @@ os.environ["OPENAI_API_KEY"] = api_key
 LIST_DATASET_CSV = ["CR", "CT", "ICL", "IF", "MT", "SUMM"]  # Dataset list
 
 
-input_file_folder = "/home/snt/projects_lujun/temperature_eval_github/temperature_eval/data/Additional_Results/full_size"
-file_path = f"{input_file_folder}/vllm_exp_dataset_csv_Mixtral-8x7B-Instruct-v0.1__20250105_100250.jsonl"
-model_name = "Mixtral-8x7B-Instruct"
+input_file_folder = "/home/snt/projects_lujun/temperature_eval_github/temperature_eval/data/Additional_Results/model_complementary_4bits"
+file_path = f"{input_file_folder}/vllm_exp_dataset_csv_Meta-Llama-3-8B-Instruct-awq__20250113_201944.jsonl"
+model_name = "Meta-Llama-3-8B-Instruct-awq"
 evaluator_model_name = "gpt-3.5-turbo"
 
 df = pd.read_json(file_path, lines=True)
@@ -40,7 +40,7 @@ evaluator = EVALUATOR(
 )
 
 with open(
-    "/home/snt/projects_lujun/temperature_eval_github/temperature_eval/ttcw_all_tests.json",
+    "/home/snt/projects_lujun/temperature_eval_github/temperature_eval/data/ttcw_all_tests.json",
     "r",
 ) as f:
     tests = json.load(f)
@@ -282,19 +282,19 @@ MT_df = df[df["category"] == "MT"]
 MT_df["MT_accuracy"] = MT_df.progress_apply(compute_bleu_score, axis=1)
 MT_df.to_json(f"{output_folder}/{output_prefix}_MT.jsonl", lines=True, orient="records")
 
-# tqdm.pandas()
-# SUMM_df = df[df["category"] == "SUMM"]
-# SUMM_df["SUMM_accuracy"] = SUMM_df.progress_apply(compute_rouge_score, axis=1)
-# SUMM_df.to_json(
-#     f"{output_folder}/{output_prefix}_SUMM.jsonl", lines=True, orient="records"
-# )
+tqdm.pandas()
+SUMM_df = df[df["category"] == "SUMM"]
+SUMM_df["SUMM_accuracy"] = SUMM_df.progress_apply(compute_rouge_score, axis=1)
+SUMM_df.to_json(
+    f"{output_folder}/{output_prefix}_SUMM.jsonl", lines=True, orient="records"
+)
 
-# tqdm.pandas()
-# ICL_df = df[df["category"] == "ICL"]
-# ICL_df["ICL_accuracy"] = ICL_df.progress_apply(compute_icl_score, axis=1)
-# ICL_df.to_json(
-#     f"{output_folder}/{output_prefix}_ICL.jsonl", lines=True, orient="records"
-# )
+tqdm.pandas()
+ICL_df = df[df["category"] == "ICL"]
+ICL_df["ICL_accuracy"] = ICL_df.progress_apply(compute_icl_score, axis=1)
+ICL_df.to_json(
+    f"{output_folder}/{output_prefix}_ICL.jsonl", lines=True, orient="records"
+)
 
 
 # # CR Dataset Processing

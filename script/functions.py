@@ -1,40 +1,16 @@
 import numpy as np
-import pandas as pd
-import time
-import datetime
-import gc
-import random
-from nltk.corpus import stopwords
-import re
-
 import torch
-import torch.nn as nn
-from torch.utils.data import (
-    TensorDataset,
-    DataLoader,
-    RandomSampler,
-    SequentialSampler,
-    random_split,
-)
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-import transformers
+
 from transformers import (
-    BertForSequenceClassification,
-    AdamW,
-    BertConfig,
     BertTokenizer,
-    get_linear_schedule_with_warmup,
 )
 import os
 
-# Specify your cuda device
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device
 
 
-def evaluate_email(
-    input_text, input_model_name, model_path, tokenizer_path, max_padding=512
+def bertClassifier(
+    input_text, model_path, tokenizer_path, max_padding=512
 ):
     tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
     model = torch.load(model_path)
@@ -42,47 +18,33 @@ def evaluate_email(
     attention_masks = []
     texts = [input_text]
     for text in texts:
-        # `encode_plus` will:
-        #   (1) Tokenize the sentence.
-        #   (2) Prepend the `[CLS]` token to the start.
-        #   (3) Append the `[SEP]` token to the end.
-        #   (4) Map tokens to their IDs.
-        #   (5) Pad or truncate the sentence to `max_length`
-        #   (6) Create attention masks for [PAD] tokens.
         encoded_dict = tokenizer.encode_plus(
-            text,  # Sentence to encode.
+            text, 
             add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
             max_length=max_padding,  # Pad & truncate all sentences.
             pad_to_max_length=True,
             return_attention_mask=True,  # Construct attn. masks.
             return_tensors="pt",  # Return pytorch tensors.
         )
-
         input_ids.append(encoded_dict["input_ids"])
         attention_masks.append(encoded_dict["attention_mask"])
 
-    # Convert the lists into tensors.
     input_ids = torch.cat(input_ids, dim=0)
     attention_masks = torch.cat(attention_masks, dim=0)
     labels = torch.tensor([[0, 1, 2, 3, 4, 5]]).to(torch.int64)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    print("Model loaded and set to evaluation mode.")
-    model.eval()
 
-    # Evaluate data for one epoch
+    model.eval()
     b_input_ids = input_ids.to(device)
     b_input_mask = attention_masks.to(device)
-    b_labels = labels.to(device)
-    # Tell pytorch not to bother with constructing the compute graph during
-    # the forward pass, since this is only needed for backprop (training).
+
     with torch.no_grad():
         output = model(b_input_ids, token_type_ids=None, attention_mask=b_input_mask)
 
     logits = output.logits
     logits = logits.detach().cpu().numpy()
-    label_ids = b_labels.to("cpu").numpy()
 
     probabilities = np.exp(
         logits - np.max(logits, axis=1, keepdims=True)
@@ -92,10 +54,6 @@ def evaluate_email(
     # Get the mapping of categories to codes before converting to codes
     ability_mapping = {0: "CR", 1: "CT", 2: "ICL", 3: "IF", 4: "MT", 5: "SUM"}
 
-    print(f"pred_flat : {probabilities}")
-    print(f"labels_flat : {label_ids}")
-    print(f"mapping: {ability_mapping}")
-
     output = ""
     prob_dict = {}
     for i, prob in enumerate(probabilities):
@@ -103,12 +61,11 @@ def evaluate_email(
             output += f"{category}: {prob[code]:.2f} "
             prob_dict[category] = prob[code]
 
-    print(output)
     return output, prob_dict
 
 
-def evaluate_email_list(
-    input_text_list, input_model_name, model_path, tokenizer_path, max_padding=512
+def bertClassifierList(
+    input_text_list, model_path, tokenizer_path, max_padding=512
 ):
     tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
     model = torch.load(model_path)
@@ -139,8 +96,6 @@ def evaluate_email_list(
         # Convert the lists into tensors
         input_ids = torch.cat(input_ids, dim=0).to(device)
         attention_masks = torch.cat(attention_masks, dim=0).to(device)
-        labels = torch.tensor([[0, 1, 2, 3, 4, 5]]).to(torch.int64).to(device)
-
         # Perform forward pass without gradient calculation
         with torch.no_grad():
             output = model(
@@ -182,17 +137,3 @@ def evaluate_email_list(
 
     return output, agg_prob_dict
 
-
-# model_path = "/home/lujun_li/projects/temperature_eval/bert_model_target_2"
-# tokenizer_path = "/home/lujun_li/models/bert-base-multilingual-uncased"
-# # tokenizer = BertTokenizer.from_pretrained(tokenizer_path, do_lower_case=True)
-# # model = torch.load("/home/snt/projects_lujun/temperature_eval/bert_model_target_2")
-# # output, prob_dict = evaluate_email(email, model, tokenizer, max_padding=512)
-# all_outputs, all_prob_dicts = evaluate_email_list(
-#     ["hello", "moto"],
-#     "bert-base-multilingual-uncased",
-#     model_path,
-#     tokenizer_path,
-#     max_padding=512,
-# )
-# print(all_outputs)
