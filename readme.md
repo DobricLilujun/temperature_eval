@@ -36,8 +36,49 @@ This respository mainly contains several LLM abilities evaluations include:
 
 ## How to use it?
 
-
-
+### Install Dependencies
+```bash
 conda create -n env_temperature_eval python=3.10
 
 pip install gradio transformers torch matplotlib
+```
+
+### Tool Usage
+
+Here’s a clearer, more structured version of your explanation using Markdown:
+
+---
+
+### Main Interface Overview
+
+1. **Prompt Input Section**:  
+   Users can enter a prompt here and select the model they are using.
+
+2. **Action**:  
+   After entering the prompt and selecting the model, click the "Analyze" button.
+
+3. **Model Invocation**:  
+   The system will automatically invoke the **Volavion/bert-base-multilingual-uncased-temperature-cls** from huggingface that has been trained to analyze the input prompt.
+
+3. **Class Label Output**:  
+  The system will automatically invoke the **BERT model** that has been trained to analyze the input prompt.
+
+
+---
+
+### Model Selection Guidelines
+
+- **Model Selection**:  
+   If the model you are using is **not listed** in the provided options, select a model with a **similar number of parameters**.
+   
+- **Reasoning**:  
+   Research shows that models with a similar number of parameters exhibit **similar performance variations** with respect to temperature changes.
+
+- **How to Choose**:
+   - Select the model that most closely matches yours in terms of **parameter count**.
+   - For example, if using a **Llama 3.1 8B** model, choose the closest match within the **Llama 3 series**.
+     - In this case, the optimal choice would be:
+       - **Meta-Llama-3-8B-Instruct**
+       - **Llama-3.1-8B-Instruct**
+
+---
