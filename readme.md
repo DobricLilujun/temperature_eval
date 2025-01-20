@@ -1,17 +1,7 @@
 # Temperature_eval
 
-There will be some updates for the in-depth analysis on the single inference. Last update: **15 July, 2024**.
+There will be some updates for the in-depth analysis on the single inference.
 
-To do:
-
-  1. Creativity analysis and validation of results. 
-     1. Why high temperature lose performance and why the most good temperature is 1.0 but not 0 or 2.0.
-     2. Hallucination detection count? How to give this as a statistical results
-     3. Perplextiy of stories, cosine similarity of stories, normalised edit distatnce resulst.
-     4. List all different types of hallucination and try to explain why
-  2. Summarization analysis.
-     1. What is the comparaison between STOA?
-     2. What is the worse cases of it?
 
 https://medium.com/ai-assimilating-intelligence/cross-entropy-in-large-language-models-llms-4f1c842b5fca
    
@@ -30,7 +20,8 @@ This is a respository for evaluation and visulization of the results obtaining f
 
 ## Abstract
 
-> When employing Large Language Models (LLMs) on different tasks, a crucial hyperparameter to alternate is the sampling temperature, typically adjusted through logarithmic probability indicating the level of randomness. Recent research focuses on empirical performance analysis within a single scenario and one specific ability, without providing a comprehensive causality analysis encompassing several use cases.  Furthermore, identifying the optimal temperature for specific applications (use case/task) remains a significant challenge in research and industry contexts. In this work, we provide a comprehensive study to understand the behavior and capabilities of LLMs at various sampling temperatures. By following the first two levels of the causality ladder,  association and intervention. This paper shifts the focus on the effect of temperature from general mixed-task benchmarks to examine six distinct-specific abilities, by developing both statistical and causal models, thereby providing a thorough causality analysis and guidelines for optimal temperature settings.
+> When employing Large Language Models (LLMs) on different tasks, a crucial hyperparameter to alternate is the sampling temperature which adjusts the logits of the soft max layers, hence reshaping the distribution \cite{radford2019language}. Recent studies challenge the notion of "Stochastic Parrots" as an analogy for language models, demonstrating that these models can learn formal semantic meaning rather than merely memorizing data. Randomness plays a critical role in LLMs, driving research on temperature in so-called "Next Token Generation". The researcher studied how LLM performance changes with temperature on complex datasets requiring multiple abilities. However, there remains a lack of comprehensive analysis that independently evaluates individual model skill over a broad range of temperature settings. In this paper, we systematically examine the impact of temperature on datasets specifically designed to evaluate six distinct skills. Our study spans Small (0B-3B), Medium (6B-13B), and Large (50B-80B) open-source models, assessing their performance across a temperature range from 0 to 2. The results reveal nuanced and skill-specific variations in model responses to temperature changes. To address the practical demands of complex real-world applications of LLMs, we introduce a BERT-based optimal temperature selector that dynamically adjusts temperature, giving a prompt. This approach achieves a performance improvement exceeding 5\% for mediums and small size models compared to fixed-temperature configurations. Furthermore, we investigate the robustness of temperature effects under conditions of full-precision models and also extend the analysis on three models to temperatures up to 4.0. Our findings confirm consistent temperature effect with performance degradation, and the "Mutation Temperature"—the point where significant performance shifts occur—tends to increase with model size.
+
 ## Abilities
 This respository mainly contains several LLM abilities evaluations include: 
 
@@ -46,20 +37,7 @@ This respository mainly contains several LLM abilities evaluations include:
 ## How to use it?
 
 
-This project mainly shows the results obtained during the research and accepts all comments. This data is uploaded in CSV files in the data folder. The statistical evaluation is in `evaluation_{ability_name}.ipynb` and the causal modeling is used in `causal_modelling_complete_base.ipynb`. Readers can check the CSV files obtained during the research to see if there are any intuitions for future research. Here, we show the empirical results and causal estimation results to give you an intuition about how to set temperature during your LLMs application pipeline.
 
-![empirical](images/stats.png)
+conda create -n env_temperature_eval python=3.10
 
-<p align="center"><em>Figure 1: Empirical results.</em></p>
-
-![causal estimation results](images/causal.png)
-<p align="center"><em>Figure 2: Causal estimation results.</em></p>
-
-## Outcome Data
-
-The file names inside each folder of data are of two types:
-
-- `exp_result_{model_id}_{time_generated}_{project_id}.csv`
-- `exp_result_{model_id}_{time_generated}_{project_id}_evaluated.csv`
-
-The file without `_evaluated` contains all the inferences for the model. The file with `_evaluated` contains additional columns for performance evaluation. The column details are easy to understand. If you have any questions, please contact my personal email: lilujun588588@gmail.com.
+pip install gradio transformers torch matplotlib

@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 import requests
 import argparse
-import json
 
 
 def validate_config(config):

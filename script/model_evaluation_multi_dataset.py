@@ -2,8 +2,6 @@ import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
 import os
-import requests
-import argparse
 import json
 from utils.evaluators import EVALUATOR
 from langchain import PromptTemplate

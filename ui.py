@@ -4,7 +4,6 @@ import pandas as pd  # Pandas is used for handling data in DataFrame format
 from transformers import BertTokenizer, BertForSequenceClassification  # Hugging Face's transformers for BERT model and tokenizer
 from torch import torch  # PyTorch for working with neural networks
 from torch.nn import functional as F  # PyTorch's functional module (commonly used for activations, loss functions)
-from sklearn.preprocessing import MinMaxScaler  # Used for scaling data
 import matplotlib.pyplot as plt  # Matplotlib for plotting graphs
 
 # Import custom modules from the project
