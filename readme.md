@@ -6,7 +6,7 @@ This repository serves as a tool to identify the optimal temperature settings fo
 **An In-Depth Study of the Effect of Temperature on Large Language Models. Hot or Cold?**
 
 <p align="center">
-  <img src="images/head.jpeg" alt="Empirical Analysis" width="300">
+  <img src="assets/images/head.jpeg" alt="Empirical Analysis" width="300">
 </p>
 
 The tool employs a fine-tuned [fine-tuned BERT model](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls) as a prompt classifier to predict the most appropriate capability required to address the input prompt. Based on the classifier's output, the tool then determines the optimal temperature setting, guided by the performance distributions analyzed in the referenced paper. This integration ensures that the temperature configuration aligns with empirical insights, maximizing the effectiveness of the model's response to the prompt.
