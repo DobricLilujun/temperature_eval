@@ -3,7 +3,7 @@
 
 This repository serves as a tool to identify the optimal temperature settings for a given prompt and model, leveraging findings from the following paper:
 
-**Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of LLMs**
+**An In-Depth Study of the Effect of Temperature on Large Language Models. Hot or Cold?**
 
 <p align="center">
   <img src="images/head.jpeg" alt="Empirical Analysis" width="300">
@@ -110,9 +110,7 @@ This section provides a structured guide for understanding and interacting with 
 - **How to Choose**:
    - Select the model that most closely matches yours in terms of **parameter count**.
    - For example, if using a **Llama 3.1 8B** model, choose the closest match within the **Llama 3 series**.
-     - In this case, the optimal choice would be:
-       - **Meta-Llama-3-8B-Instruct**
-       - **Llama-3.1-8B-Instruct**
+     - In this case, the optimal choice would be: **Meta-Llama-3-8B-Instruct**
 
 ---
 
