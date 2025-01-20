@@ -1,21 +1,16 @@
 # Temperature_eval
 
-There will be some updates for the in-depth analysis on the single inference.
 
+This repository serves as a tool to identify the optimal temperature settings for a given prompt and model, leveraging findings from the following paper:
 
-https://medium.com/ai-assimilating-intelligence/cross-entropy-in-large-language-models-llms-4f1c842b5fca
-   
-**Detecting grammer error checking? **
-**Detecting hallucination error checking? **
-
-
-This is a respository for evaluation and visulization of the results obtaining from observations. This is the respository acoomplanied by the following paper:
-
-> **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
+**Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of LLMs**
 
 <p align="center">
-  <img src="images/head.jpeg" alt="empirical" width="300">
+  <img src="images/head.jpeg" alt="Empirical Analysis" width="300">
 </p>
+
+The tool employs a fine-tuned [fine-tuned BERT model](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls) as a prompt classifier to predict the most appropriate capability required to address the input prompt. Based on the classifier's output, the tool then determines the optimal temperature setting, guided by the performance distributions analyzed in the referenced paper. This integration ensures that the temperature configuration aligns with empirical insights, maximizing the effectiveness of the model's response to the prompt.
+
 
 
 ## Abstract
@@ -32,37 +27,75 @@ This respository mainly contains several LLM abilities evaluations include:
 - **Summarization (SUM)**: This entails condensing lengthy texts or discussions into concise and informative summaries, while preserving key information and main ideas.
 - **Machine Translation (MT)**: MT is a subfield of computational linguistics, and LLMs have shown outstanding potential in translating text from one language to another.
 
+---
 
 
-## How to use it?
+## Setting Up the Environment
 
-### Install Dependencies
-```bash
-conda create -n env_temperature_eval python=3.10
+Follow the steps below to configure the environment and install the required dependencies for the tool:
 
-pip install gradio transformers torch matplotlib
-```
+1. **Create and Activate the Conda Environment**  
+   Execute the following commands to set up a dedicated Conda environment:  
+   ```bash
+   conda create -n env_temperature_eval python=3.10
+   conda activate env_temperature_eval
+   ```
 
-### Tool Usage
+2. **Install Dependencies**  
+   Install the necessary Python libraries using `pip`:  
+   ```bash
+   pip install gradio transformers torch matplotlib
+   ```
 
-Here’s a clearer, more structured version of your explanation using Markdown:
+3. **Start the Tool**  
+   Launch the server by running the main script:  
+   ```bash
+   python main_start.py
+   ```
+
+4. **Access the Tool**  
+   After the server starts, a link will appear in the terminal. Click on the link to access and interact with the tool.
+
 
 ---
 
-### Main Interface Overview
+## Tool Usage Overview
 
-1. **Prompt Input Section**:  
-   Users can enter a prompt here and select the model they are using.
+This section provides a structured guide for understanding and interacting with the tool.
 
-2. **Action**:  
-   After entering the prompt and selecting the model, click the "Analyze" button.
+### 1. **Prompt Input Section**  
+   Users can input a prompt in this section and select the desired model for evaluation.
 
-3. **Model Invocation**:  
-   The system will automatically invoke the **Volavion/bert-base-multilingual-uncased-temperature-cls** from huggingface that has been trained to analyze the input prompt.
+### 2. **Action**  
+   After entering the prompt and selecting the model, click the **"Analyze"** button to initiate the evaluation process.
 
-3. **Class Label Output**:  
-  The system will automatically invoke the **BERT model** that has been trained to analyze the input prompt.
+### 3. **Model Invocation**  
+   The tool utilizes the model **Volavion/bert-base-multilingual-uncased-temperature-cls** available on Hugging Face. This model is pre-trained to analyze input prompts and fine-tuned for temperature classification tasks. No special permissions are required for downloading the model.
 
+### 4. **Class Label Output**  
+   Upon clicking the **"Analyze"** button:
+   - A bar chart visualizing the probability distribution across various class labels will be displayed.
+   - These probabilities are generated using the fine-tuned BERT-based model.
+
+### 5. **Best Temperature Display**  
+   The **"Best Temperature"** text box will:
+   - Display the optimal temperature based on the predicted class label.
+   - This temperature is determined using the performance distribution referenced in the associated research paper.
+
+### 6. **Input Temperature Adjustment**  
+   - The recommendation section includes a sliding bar, which is automatically set to the best temperature identified during analysis.
+   - Users can manually adjust the temperature to accommodate specific requirements.
+
+### 7. **API Key Setup**  
+   - Users need to provide an API key for generation tasks.
+   - The tool supports API keys in the **vLLM OpenAI API** format as well as **Ollama API keys**.
+
+### 8. **Outputs Section**  
+   - If a single prompt is provided as input, the result will be displayed directly.
+   - For CSV input files:
+     - The file should include at least one column named **"input"**, which contains the prompts for evaluation.
+     - The output CSV file will include an additional column named **"generated response"** that contains results generated using the specified API.
+     - A download button is provided for easy retrieval of the processed file.
 
 ---
 
@@ -82,3 +115,19 @@ Here’s a clearer, more structured version of your explanation using Markdown:
        - **Llama-3.1-8B-Instruct**
 
 ---
+
+
+---
+
+## License
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute the code and its derivatives under the terms of this license. For more details, please refer to the [LICENSE](LICENSE) file.
+
+---
+
+## Citation
+
+If you use this tool or the associated paper in your work, please cite us using the following format:
+
+To be filled.
+

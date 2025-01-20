@@ -72,7 +72,7 @@ class GradioUIManager:
                     )
 
                     self.best_temperature_output_box = gr.Textbox(
-                        label="Best Temperature As An Output",
+                        label="Best Temperature",
                         elem_id="best_temperature_output",
                         interactive=False,
                     )
