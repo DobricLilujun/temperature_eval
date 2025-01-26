@@ -8,3 +8,4 @@ obsolete/
 .vscode/
 models/
 .gradio/
+__pycache__/

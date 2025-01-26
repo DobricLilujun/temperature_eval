@@ -1,36 +1,22 @@
 # Temperature_eval
 
-There will be some updates for the in-depth analysis on the single inference. Last update: **15 July, 2024**.
 
-To do:
+This repository serves as a tool to identify the optimal temperature settings for a given prompt and model, leveraging findings from the following paper:
 
-  1. Creativity analysis and validation of results. 
-     1. Why high temperature lose performance and why the most good temperature is 1.0 but not 0 or 2.0.
-     2. Hallucination detection count? How to give this as a statistical results
-     3. Perplextiy of stories, cosine similarity of stories, normalised edit distatnce resulst.
-     4. List all different types of hallucination and try to explain why
-  2. Summarization analysis.
-     1. What is the comparaison between STOA?
-     2. What is the worse cases of it?
-
-https://medium.com/ai-assimilating-intelligence/cross-entropy-in-large-language-models-llms-4f1c842b5fca
-   
-**Detecting grammer error checking? **
-**Detecting hallucination error checking? **
-
-
-This is a respository for evaluation and visulization of the results obtaining from observations. This is the respository acoomplanied by the following paper:
-
-> **Hot N Cold: A Comprehensive Analysis of Temperature on the Performance of Llms**
+**An In-Depth Study of the Effect of Temperature on Large Language Models. Hot or Cold?**
 
 <p align="center">
-  <img src="images/head.jpeg" alt="empirical" width="300">
+  <img src="images/head.jpeg" alt="Empirical Analysis" width="300">
 </p>
+
+The tool employs a fine-tuned [fine-tuned BERT model](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls) as a prompt classifier to predict the most appropriate capability required to address the input prompt. Based on the classifier's output, the tool then determines the optimal temperature setting, guided by the performance distributions analyzed in the referenced paper. This integration ensures that the temperature configuration aligns with empirical insights, maximizing the effectiveness of the model's response to the prompt.
+
 
 
 ## Abstract
 
-> When employing Large Language Models (LLMs) on different tasks, a crucial hyperparameter to alternate is the sampling temperature, typically adjusted through logarithmic probability indicating the level of randomness. Recent research focuses on empirical performance analysis within a single scenario and one specific ability, without providing a comprehensive causality analysis encompassing several use cases.  Furthermore, identifying the optimal temperature for specific applications (use case/task) remains a significant challenge in research and industry contexts. In this work, we provide a comprehensive study to understand the behavior and capabilities of LLMs at various sampling temperatures. By following the first two levels of the causality ladder,  association and intervention. This paper shifts the focus on the effect of temperature from general mixed-task benchmarks to examine six distinct-specific abilities, by developing both statistical and causal models, thereby providing a thorough causality analysis and guidelines for optimal temperature settings.
+> When employing Large Language Models (LLMs) on different tasks, a crucial hyperparameter to alternate is the sampling temperature which adjusts the logits of the soft max layers, hence reshaping the distribution \cite{radford2019language}. Recent studies challenge the notion of "Stochastic Parrots" as an analogy for language models, demonstrating that these models can learn formal semantic meaning rather than merely memorizing data. Randomness plays a critical role in LLMs, driving research on temperature in so-called "Next Token Generation". The researcher studied how LLM performance changes with temperature on complex datasets requiring multiple abilities. However, there remains a lack of comprehensive analysis that independently evaluates individual model skill over a broad range of temperature settings. In this paper, we systematically examine the impact of temperature on datasets specifically designed to evaluate six distinct skills. Our study spans Small (0B-3B), Medium (6B-13B), and Large (50B-80B) open-source models, assessing their performance across a temperature range from 0 to 2. The results reveal nuanced and skill-specific variations in model responses to temperature changes. To address the practical demands of complex real-world applications of LLMs, we introduce a BERT-based optimal temperature selector that dynamically adjusts temperature, giving a prompt. This approach achieves a performance improvement exceeding 5\% for mediums and small size models compared to fixed-temperature configurations. Furthermore, we investigate the robustness of temperature effects under conditions of full-precision models and also extend the analysis on three models to temperatures up to 4.0. Our findings confirm consistent temperature effect with performance degradation, and the "Mutation Temperature"—the point where significant performance shifts occur—tends to increase with model size.
+
 ## Abilities
 This respository mainly contains several LLM abilities evaluations include: 
 
@@ -41,25 +27,105 @@ This respository mainly contains several LLM abilities evaluations include:
 - **Summarization (SUM)**: This entails condensing lengthy texts or discussions into concise and informative summaries, while preserving key information and main ideas.
 - **Machine Translation (MT)**: MT is a subfield of computational linguistics, and LLMs have shown outstanding potential in translating text from one language to another.
 
+---
 
 
-## How to use it?
+## Setting Up the Environment
+
+Follow the steps below to configure the environment and install the required dependencies for the tool:
+
+1. **Create and Activate the Conda Environment**  
+   Execute the following commands to set up a dedicated Conda environment:  
+   ```bash
+   conda create -n env_temperature_eval python=3.10
+   conda activate env_temperature_eval
+   ```
+
+2. **Install Dependencies**  
+   Install the necessary Python libraries using `pip`:  
+   ```bash
+   pip install gradio transformers torch matplotlib
+   ```
+
+3. **Start the Tool**  
+   Launch the server by running the main script:  
+   ```bash
+   python main_start.py
+   ```
+
+4. **Access the Tool**  
+   After the server starts, a link will appear in the terminal. Click on the link to access and interact with the tool.
 
 
-This project mainly shows the results obtained during the research and accepts all comments. This data is uploaded in CSV files in the data folder. The statistical evaluation is in `evaluation_{ability_name}.ipynb` and the causal modeling is used in `causal_modelling_complete_base.ipynb`. Readers can check the CSV files obtained during the research to see if there are any intuitions for future research. Here, we show the empirical results and causal estimation results to give you an intuition about how to set temperature during your LLMs application pipeline.
+---
 
-![empirical](images/stats.png)
+## Tool Usage Overview
 
-<p align="center"><em>Figure 1: Empirical results.</em></p>
+This section provides a structured guide for understanding and interacting with the tool.
 
-![causal estimation results](images/causal.png)
-<p align="center"><em>Figure 2: Causal estimation results.</em></p>
+### 1. **Prompt Input Section**  
+   Users can input a prompt in this section and select the desired model for evaluation.
 
-## Outcome Data
+### 2. **Action**  
+   After entering the prompt and selecting the model, click the **"Analyze"** button to initiate the evaluation process.
 
-The file names inside each folder of data are of two types:
+### 3. **Model Invocation**  
+   The tool utilizes the model **Volavion/bert-base-multilingual-uncased-temperature-cls** available on Hugging Face. This model is pre-trained to analyze input prompts and fine-tuned for temperature classification tasks. No special permissions are required for downloading the model.
 
-- `exp_result_{model_id}_{time_generated}_{project_id}.csv`
-- `exp_result_{model_id}_{time_generated}_{project_id}_evaluated.csv`
+### 4. **Class Label Output**  
+   Upon clicking the **"Analyze"** button:
+   - A bar chart visualizing the probability distribution across various class labels will be displayed.
+   - These probabilities are generated using the fine-tuned BERT-based model.
 
-The file without `_evaluated` contains all the inferences for the model. The file with `_evaluated` contains additional columns for performance evaluation. The column details are easy to understand. If you have any questions, please contact my personal email: lilujun588588@gmail.com.
+### 5. **Best Temperature Display**  
+   The **"Best Temperature"** text box will:
+   - Display the optimal temperature based on the predicted class label.
+   - This temperature is determined using the performance distribution referenced in the associated research paper.
+
+### 6. **Input Temperature Adjustment**  
+   - The recommendation section includes a sliding bar, which is automatically set to the best temperature identified during analysis.
+   - Users can manually adjust the temperature to accommodate specific requirements.
+
+### 7. **API Key Setup**  
+   - Users need to provide an API key for generation tasks.
+   - The tool supports API keys in the **vLLM OpenAI API** format as well as **Ollama API keys**.
+
+### 8. **Outputs Section**  
+   - If a single prompt is provided as input, the result will be displayed directly.
+   - For CSV input files:
+     - The file should include at least one column named **"input"**, which contains the prompts for evaluation.
+     - The output CSV file will include an additional column named **"generated response"** that contains results generated using the specified API.
+     - A download button is provided for easy retrieval of the processed file.
+
+---
+
+### Model Selection Guidelines
+
+- **Model Selection**:  
+   If the model you are using is **not listed** in the provided options, select a model with a **similar number of parameters**.
+   
+- **Reasoning**:  
+   Research shows that models with a similar number of parameters exhibit **similar performance variations** with respect to temperature changes.
+
+- **How to Choose**:
+   - Select the model that most closely matches yours in terms of **parameter count**.
+   - For example, if using a **Llama 3.1 8B** model, choose the closest match within the **Llama 3 series**.
+     - In this case, the optimal choice would be: **Meta-Llama-3-8B-Instruct**
+
+---
+
+
+---
+
+## License
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute the code and its derivatives under the terms of this license. For more details, please refer to the [LICENSE](LICENSE) file.
+
+---
+
+## Citation
+
+If you use this tool or the associated paper in your work, please cite us using the following format:
+
+To be filled.
+

@@ -22,6 +22,10 @@ class GradioUIManager:
         self.section_description = "This module facilitates the input of a prompt for analysis and processing. Based on the provided prompt and the selected model, the optimal temperature setting will be determined."
         self.recommendation_title = "Recommendation section"
         self.recommendation_description = "Provide the best temperature settings based on your input or prompts."
+        self.section_title_size = 50
+        self.section_description_size = 25
+        self.subsection_title_size = 20
+        self.subsection_description_size = 12
     def create_interface(self):
         """
         Creates the Gradio interface using the provided callback functions and model choices.
@@ -29,10 +33,20 @@ class GradioUIManager:
         with gr.Blocks() as demo:
             # Section 1: Input and Analysis
             gr.HTML(
-                "<div style='text-align: center;'>"
-                f"<span style='color: gray; font-size: 25px; font-weight: bold;'>{self.section_title}</span><br>"
-                f"<span style='color: gray; font-size: 12px;'><small>{self.section_description}</small></span>"
-                "</div>"
+            "<div style='text-align: center; display: flex; align-items: center;'>"
+            f"""
+            <span style='color: gray; font-size: {self.section_title_size}px; font-weight: bold; display: inline;'>
+                {self.section_title}
+            </span>
+            <span style='display: inline; vertical-align: middle; margin-left: 10px;'>
+                <img src='https://raw.githubusercontent.com/DobricLilujun/imagesAll/main/imagesthermometer.png' 
+                    alt='Thermometer Image' 
+                    style='height: {self.section_title_size}px;'>
+            </span>
+            </div>
+            """
+            f"<div> <span style='color: gray; font-size: {self.section_description_size}px; display: inline-block;'><small>{self.section_description}</small></span></div>"
+            ""
             )
             with gr.Row():
                 with gr.Column(scale=0.5):
@@ -53,23 +67,24 @@ class GradioUIManager:
                     )
                 with gr.Column(scale=0.5):
                     self.cls_label_output_box = gr.Plot(
-                        label="Class Label Output (Table)",
+                        label="Class Label Output (Bar Chart)",
                         elem_id="cls_label_output",
                     )
 
                     self.best_temperature_output_box = gr.Textbox(
-                        label="Best Temperature As An Output",
+                        label="Best Temperature",
                         elem_id="best_temperature_output",
                         interactive=False,
                     )
+
             with gr.Row():
                 with gr.Column(scale=1.0):
                     self.input_button = gr.Button("Analyze", elem_id="input_button")
 
             gr.HTML(
                 "<div style='text-align: left;'>"
-                f"<span style='color: gray; font-size: 25px; font-weight: bold;'>{self.recommendation_title}</span><br>"
-                f"<span style='color: gray; font-size: 12px;'><small>{self.recommendation_description}</small></span>"
+                f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>{self.recommendation_title}</span><br>"
+                f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>{self.recommendation_description}</small></span>"
                 "</div>"
             )
             gr.HTML("<hr>")
@@ -95,8 +110,8 @@ class GradioUIManager:
             # Section 3: Outputs
             gr.HTML(
                 "<div style='text-align: left;'>"
-                "<span style='color: gray; font-size: 25px; font-weight: bold;'>Outputs</span><br>"
-                "<span style='color: gray; font-size: 12px;'><small>The output files and analysis results.</small></span>"
+                f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>Outputs</span><br>"
+                f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>The output files and analysis results.</small></span>"
                 "</div>"
             )
             gr.HTML("<hr>")
