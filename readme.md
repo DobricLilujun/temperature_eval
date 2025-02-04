@@ -10,7 +10,12 @@ This repository serves as a tool to identify the optimal temperature settings fo
 </p>
 
 
-This tool provides a structured guide for usage, starting with the **Prompt Input Section**, where users input a **prompt** and select a **model** for evaluation. Afterward, clicking the **"Analyze"** button initiates the process, utilizing the **[Volavion/bert-base-multilingual-uncased-temperature-cls](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls)** model, which is **pre-trained** and **fine-tuned** for temperature classification without requiring special permissions. The output includes a **bar chart** visualizing class label probabilities and a **"Best Temperature"** text box showing the **optimal temperature** derived from the model's performance distribution.
+This tool provides a structured guide for usage, starting with the **Prompt Input Section**, where users input a **prompt** and select a **model** for evaluation. Afterward, clicking the **"Analyze"** button initiates the process, utilizing the **[Volavion/bert-base-multilingual-uncased-temperature-cls](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls)** model, which is **pre-trained** and **fine-tuned** for temperature classification without requiring special permissions. The output includes a **bar chart** visualizing class label probabilities and a **"Best Temperature"** text box showing the **optimal temperature** derived from the model's performance distribution. The basic UI of this tool is shown in the following image, which allows you to input either a prompt or a file to determine the optimal temperature for your use cases.
+<p align="center">
+  <img src="assets/images/sample.png" alt="Sample UI Design" width="900">
+</p>
+
+
 <!-- 
 ## Abilities
 
