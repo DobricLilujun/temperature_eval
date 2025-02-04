@@ -10,8 +10,7 @@ This repository serves as a tool to identify the optimal temperature settings fo
 </p>
 
 
-This tool provides a structured guide for usage, starting with the **Prompt Input Section**, where users input a **prompt** and select a **model** for evaluation. Afterward, clicking the **"Analyze"** button initiates the process, utilizing the **[Volavion/bert-base-multilingual-uncased-temperature-cls](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls)** model, which is **pre-trained** and **fine-tuned** for temperature classification without requiring special permissions. The output includes a **bar chart** visualizing class label probabilities and a **"Best Temperature"** text box showing the **optimal temperature** derived from the model's performance distribution. Users can fine-tune this value via a **sliding bar**. For generation tasks, an **API key** in either the **vLLM OpenAI API** or **Ollama API** format is required. If a **CSV file** with a column named **"input"** is uploaded, the tool appends a **"generated response"** column to the output file, which can be downloaded easily.
-
+This tool provides a structured guide for usage, starting with the **Prompt Input Section**, where users input a **prompt** and select a **model** for evaluation. Afterward, clicking the **"Analyze"** button initiates the process, utilizing the **[Volavion/bert-base-multilingual-uncased-temperature-cls](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls)** model, which is **pre-trained** and **fine-tuned** for temperature classification without requiring special permissions. The output includes a **bar chart** visualizing class label probabilities and a **"Best Temperature"** text box showing the **optimal temperature** derived from the model's performance distribution.
 <!-- 
 ## Abilities
 
@@ -122,6 +121,6 @@ This project is licensed under the MIT License. You are free to use, modify, and
 
 ## Citation
 
-If you use this tool or the associated paper in your work, please cite us using the following format:
+If you use this tool or the associated paper in your work, please cite us.
 
 
