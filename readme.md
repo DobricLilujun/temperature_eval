@@ -34,20 +34,8 @@ Follow the steps below to configure the environment and install the required dep
    ```bash
    pip install gradio transformers torch matplotlib
    ```
-3. **(Optional) Set Up Your API server**
-
-   Considering the API calling and format is different, we rovide an interface to call the API by allowing you to set the curl API format.
-
-   When you use vllm server，
-
-   When you use ollama server，
-
-   When you use you own API，
-
-   When you use openAI API，
-
    
-4. **Start the Tool**  
+3. **Start the Tool**  
    
    Launch the server by running the main script:  
    ```bash
@@ -81,6 +69,52 @@ Follow the steps below to configure the environment and install the required dep
 
 When selecting a model, if your specific model is **not listed** in the provided options, choose one with a **similar number of parameters**. Research indicates that models with similar parameter counts tend to exhibit **comparable performance variations** when adjusting for temperature changes. To make the best choice, find the model closest to yours in **parameter count**. For instance, if you are using a **Llama 3.1 8B** model, the optimal match would be **Meta-Llama-3-8B-Instruct** from the **Llama 3 series**.
 
+### Additional Experimental results
+
+This parts shows addtional Experimental reuslts contains: 
+
+1. Complete FP16 quantization testing results.
+2. Full SuperGLUE accuracy testing results.
+
+**As for comoplete FP16**, the table presented in the paper already serves as a strong indicator of performance differences. However, in this section, we additionally provide a line chart to offer a more comprehensive visualization, allowing readers to gain deeper insights into the impact of transitioning from 4-bit quantized inference to FP16 inference. As shown in [Figure 1](#fig-precision), it can be observed that model performance is slightly reduced by quantization, but the overall trend of performance variation with temperature remains consistent. With the exception of CT, where it is observed that 4-bit quantization results in a 34\% loss of performance in Meta-Llama-3-8B-Instruct, it is concluded that for innovative writing tasks or solving complex problems with LLMs, full-precision models are still preferable. It was also noticed that the quantized version of Llama-3.2-1B-Instruct performs slightly better than the full-precision model on CR. However, since its accuracy is below 0.33, similar to random guessing (33\%), it is believed that quantization may make the model more prone to random guesses.
+
+<div align="center">
+<figure id="fig-precision">
+  <img src="assets/images/full_precision_vs_4bits.png" alt="Empirical Analysis" width="600">
+  <figcaption><strong></strong></figcaption>
+</figure>
+</div>
+
+
+
+Regarding the **Full SuperGLUE accuracy testing results**, in this paper, we present results for only three tasks from the SuperGLUE benchmark, where we observe significant performance improvements, especially for small and medium-sized models, compared to the 1.0 baseline temperature. However, due to page limitations, we are unable to include all findings. Notably, we also obtained some interesting results when comparing the baseline temperature of 1.0 to 0.1 across the entire SuperGLUE benchmark. The results are presented in the following table.
+  
+
+
+<div align="center">
+
+| **Model**                        | **Type**  | **Default T = 0.1** | **Default T = 1.0** |
+|-----------------------------------|----------|---------------------|---------------------|
+| **Llama-3.2-1B-Instruct**         | \(ACC_D\) | 0.4474              | 0.4661              |
+|                                   | \(ACC_B\) | **0.4526**          | 0.4608              |
+|                                   | \(ACC_C\) | **0.4616**          | **0.4889**          |
+| **Meta-Llama-3-8B-Instruct**      | \(ACC_D\) | 0.6889              | 0.6831              |
+|                                   | \(ACC_B\) | **0.6905**          | **0.6941**          |
+|                                   | \(ACC_C\) | 0.6858              | **0.6879**          |
+| **Mixtral-8x7B-Instruct-v0.1**    | \(ACC_D\) | 0.7444              | 0.7420              |
+|                                   | \(ACC_B\) | 0.7436              | 0.7420              |
+|                                   | \(ACC_C\) | 0.7437              | 0.7418              |
+
+</div>
+
+   
+- \( ACC_D \), \( ACC_B \), and \( ACC_C \) denote the accuracy values corresponding to distinct temperature configurations.  
+- \( ACC_D \): Accuracy achieved under a fixed default temperature of 0.1 and 1.0.  
+- \( ACC_B \): Accuracy obtained by dynamically adjusting the temperature based on a fine-tuned BERT model.  
+- \( ACC_C \): Accuracy obtained using GPT-based prompting. 
+
+Our analysis demonstrates that competitive performance can still be achieved when comparing the baseline temperatures of 0.1 and 1.0. The model exhibits performance gains relative to the baseline across the SuperGLUE benchmark, which comprises over 20,000 questions. These results further highlight the effectiveness of our temperature selection mechanism, as it consistently ensures optimal performance, particularly for smaller models. Given the increasing trend toward smaller models, such as OpenAI’s O3 Mini, and the adoption of lower-precision computations, temperature selection becomes increasingly critical in maintaining model performance.
+
 ## License
 
 This project is licensed under the MIT License. You are free to use, modify, and distribute the code and its derivatives under the terms of this license. For more details, please refer to the [LICENSE](LICENSE) file.
@@ -90,5 +124,4 @@ This project is licensed under the MIT License. You are free to use, modify, and
 
 If you use this tool or the associated paper in your work, please cite us using the following format:
 
-To be filled.
 
