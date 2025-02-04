@@ -81,45 +81,45 @@ class GradioUIManager:
                 with gr.Column(scale=1.0):
                     self.input_button = gr.Button("Analyze", elem_id="input_button")
 
-            gr.HTML(
-                "<div style='text-align: left;'>"
-                f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>{self.recommendation_title}</span><br>"
-                f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>{self.recommendation_description}</small></span>"
-                "</div>"
-            )
-            gr.HTML("<hr>")
+            # gr.HTML(
+            #     "<div style='text-align: left;'>"
+            #     f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>{self.recommendation_title}</span><br>"
+            #     f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>{self.recommendation_description}</small></span>"
+            #     "</div>"
+            # )
+            # gr.HTML("<hr>")
 
-            with gr.Row():
-                with gr.Column(scale=1):
-                    self.input_temperature_slider = gr.Slider(
-                        minimum=0,
-                        maximum=2.0,
-                        step=0.1,
-                        label="Input Temperature",
-                        elem_id="input_temperature",
-                    )
-                    self.input_api_box = gr.Textbox(
-                        label="API Key",
-                        elem_id="input_api",
-                        value="http://localhost:11434/api/generate",
-                    )
-                    self.start_experiment_button = gr.Button(
-                        "Start Experiment", elem_id="start_experiment"
-                    )
+            # with gr.Row():
+            #     with gr.Column(scale=1):
+            #         self.input_temperature_slider = gr.Slider(
+            #             minimum=0,
+            #             maximum=2.0,
+            #             step=0.1,
+            #             label="Input Temperature",
+            #             elem_id="input_temperature",
+            #         )
+                    # self.input_api_box = gr.Textbox(
+                    #     label="API Key",
+                    #     elem_id="input_api",
+                    #     value="http://localhost:11434/api/generate",
+                    # )
+                    # self.start_experiment_button = gr.Button(
+                    #     "Start Experiment", elem_id="start_experiment"
+                    # )
 
-            # Section 3: Outputs
-            gr.HTML(
-                "<div style='text-align: left;'>"
-                f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>Outputs</span><br>"
-                f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>The output files and analysis results.</small></span>"
-                "</div>"
-            )
-            gr.HTML("<hr>")
-            with gr.Row():
-                self.output_text_box = gr.Textbox(
-                    label="Output Text", elem_id="output_text", lines=10, interactive=False
-                )
-                self.download_results = gr.Button("Download Results", elem_id="download_results")
+            # # Section 3: Outputs
+            # gr.HTML(
+            #     "<div style='text-align: left;'>"
+            #     f"<span style='color: gray; font-size: {self.subsection_title_size}px; font-weight: bold;'>Outputs</span><br>"
+            #     f"<span style='color: gray; font-size: {self.subsection_description_size}px;'><small>The output files and analysis results.</small></span>"
+            #     "</div>"
+            # )
+            # gr.HTML("<hr>")
+            # with gr.Row():
+            #     self.output_text_box = gr.Textbox(
+            #         label="Output Text", elem_id="output_text", lines=10, interactive=False
+            #     )
+            #     self.download_results = gr.Button("Download Results", elem_id="download_results")
 
             # Button Click Events
             self.input_button.click(
@@ -128,20 +128,20 @@ class GradioUIManager:
                 outputs=[
                     self.cls_label_output_box,
                     self.best_temperature_output_box,
-                    self.input_temperature_slider,
+                    # self.input_temperature_slider,
                 ],
             )
 
-            self.start_experiment_button.click(
-                self.on_experiment_button_click,
-                inputs=[
-                    self.input_text_box,
-                    self.input_temperature_slider,
-                    self.input_model_radio,
-                    self.input_api_box,
-                ],
-                outputs=[self.output_text_box],
-            )
+            # self.start_experiment_button.click(
+            #     self.on_experiment_button_click,
+            #     inputs=[
+            #         self.input_text_box,
+            #         self.input_temperature_slider,
+            #         self.input_model_radio,
+            #         self.input_api_box,
+            #     ],
+            #     outputs=[self.output_text_box],
+            # )
         
         self.demo = demo
 

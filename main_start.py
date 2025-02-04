@@ -124,6 +124,5 @@ def on_button_click(input_text, input_file, input_model):
 # Initialize Gradio UI manager and create the interface
 BertChoicerUIManager = GradioUIManager(choices=model_choices, on_button_click=on_button_click, on_experiment_button_click=on_experiment_button_click)
 BertChoicerUIManager.create_interface()  # Create the interface with the provided functions
-
 # Launch the Gradio demo
 BertChoicerUIManager.demo.launch(share=False)
