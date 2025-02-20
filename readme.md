@@ -62,8 +62,6 @@ Follow the steps below to configure the environment and install the required dep
       - If you are only interested in classification results, use the model **[Volavion/bert-base-multilingual-uncased-temperature-cls](https://huggingface.co/Volavion/bert-base-multilingual-uncased-temperature-cls)** as per the guidelines.  
       - This model is fine-tuned for temperature classification tasks.
 
-   Once the best temperature is calculated, the **scrolling bar** will automatically be set to this value.  You can manually adjust the temperature if needed to perform inference using your **provided API format**.
-
    By following these steps, you can effectively use the tool for both single-prompt and batch-prompt operations, as well as for classification tasks.
 
 
@@ -127,5 +125,21 @@ This project is licensed under the MIT License. You are free to use, modify, and
 ## Citation
 
 If you use this tool or the associated paper in your work, please cite us.
+
+## Good News
+
+We are pleased to observe that the guidelines for temperature settings published by the DeepSeek team align with the findings presented in our paper. The detailed guidelines can be found at the following link: [DeepSeek Temperature Settings](https://api-docs.deepseek.com/quick_start/parameter_settings). The DeepSeek team provides specific temperature recommendations for various tasks, as outlined below:
+
+- **Coding / Math**: 0.0  
+- **Data Cleaning / Data Analysis**: 1.0  
+- **General Conversation**: 1.3  
+- **Translation**: 1.3  
+- **Creative Writing / Poetry**: 1.3  
+
+These settings are carefully tailored to the different cognitive demands of each task. For tasks involving coding and mathematical reasoning, which require causal reasoning abilities, a lower temperature (close to 0) is optimal, as this promotes more deterministic outputs. This recommendation is consistent with the findings from our research.
+
+Conversely, higher temperature values are more suitable for tasks such as creative writing or poetry, where greater diversity in responses is desirable. Furthermore, for larger models such as DeepSeek R1, which boasts more than 685 billion parameters, it is advisable to use a higher temperature. This approach is in line with our own recommendations for larger-scale models, as a higher temperature can help address more complex problems.
+
+In conclusion, the temperature guidelines provided by DeepSeek corroborate our results and shows our valuable contributions for task-specific temperature adjustments, which can be further leveraged for models with varying parameter sizes.
 
 
