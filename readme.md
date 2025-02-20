@@ -140,6 +140,6 @@ These settings are carefully tailored to the different cognitive demands of each
 
 Conversely, higher temperature values are more suitable for tasks such as creative writing or poetry, where greater diversity in responses is desirable. Furthermore, for larger models such as DeepSeek R1, which boasts more than 685 billion parameters, it is advisable to use a higher temperature. This approach is in line with our own recommendations for larger-scale models, as a higher temperature can help address more complex problems.
 
-In conclusion, the temperature guidelines provided by DeepSeek corroborate our results and shows our valuable contributions for task-specific temperature adjustments, which can be further leveraged for models with varying parameter sizes.
+In conclusion, the temperature guidelines provided by DeepSeek corroborate our results and shows our valuable contributions for task-specific temperature adjustments, which can be further leveraged for models with varying parameter sizes. And finally, we truly want to emphasize that temperature really matters.
 
 
